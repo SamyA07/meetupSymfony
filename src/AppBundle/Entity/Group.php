@@ -55,13 +55,26 @@ class Group {
      * @ORM\Column(type="text")
      */
     private $description;
+
+    /**
+     * @var User[] The users group
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="users")
+     */
     private $users;
-    private $admin;
+    /**
+     * @var User[] The admins group
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="groups")
+     * @ORM\JoinTable(name="user_admin_groups")
+     */
+    private $admins;
 
 
     //METHODS
 
 
+    //
     /**
      * @return string
      */
@@ -127,7 +140,7 @@ class Group {
     }
 
     /**
-     * @return mixed
+     * @return User[]
      */
     public function getUsers()
     {
@@ -135,7 +148,7 @@ class Group {
     }
 
     /**
-     * @param mixed $users
+     * @param User[] $users
      */
     public function setUsers($users)
     {
@@ -143,19 +156,19 @@ class Group {
     }
 
     /**
-     * @return mixed
+     * @return User[]
      */
-    public function getAdmin()
+    public function getAdmins()
     {
-        return $this->admin;
+        return $this->admins;
     }
 
     /**
-     * @param mixed $admin
+     * @param User[] $admins
      */
-    public function setAdmin($admin)
+    public function setAdmins($admins)
     {
-        $this->admin = $admin;
+        $this->admins = $admins;
     }
 }
 

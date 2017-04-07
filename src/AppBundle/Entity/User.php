@@ -9,6 +9,7 @@
 namespace AppBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,7 +27,7 @@ class User {
     /**
      * @var string The user identifier
      *
-     * @ORM\Column(type="uuid")
+     * @ORM\Column(type="guid")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
      */
@@ -56,10 +57,39 @@ class User {
      */
     private $password;
 
-    //METHODS
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Group",mappedBy="groups")
+     *
+     */
+    private $groups;
 
     /**
-     * @return string
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User",mappedBy="users")
+     *
+     */
+    private $admins;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Event",mappedBy="events")
+     *
+     */
+    private $events;
+
+
+    //CONSTRUCTOR
+
+    public function __construct()
+    {
+        $this -> groups = new ArrayCollection();
+        $this -> admins = new ArrayCollection();
+        $this -> events = new ArrayCollection();
+    }
+
+    //METHODS
+
+
+    /**
+     * @return mixed
      */
     public function getId()
     {
@@ -67,7 +97,7 @@ class User {
     }
 
     /**
-     * @param string $id
+     * @param mixed $id
      */
     public function setId($id)
     {
@@ -75,7 +105,7 @@ class User {
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getName()
     {
@@ -83,7 +113,7 @@ class User {
     }
 
     /**
-     * @param string $name
+     * @param mixed $name
      */
     public function setName($name)
     {
@@ -91,7 +121,7 @@ class User {
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getEmail()
     {
@@ -99,7 +129,7 @@ class User {
     }
 
     /**
-     * @param string $email
+     * @param mixed $email
      */
     public function setEmail($email)
     {
@@ -107,7 +137,7 @@ class User {
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getPassword()
     {
@@ -115,10 +145,78 @@ class User {
     }
 
     /**
-     * @param string $password
+     * @param mixed $password
      */
     public function setPassword($password)
     {
         $this->password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    /**
+     * @param mixed $groups
+     */
+    public function setGroups($groups)
+    {
+        $this->groups = $groups;
+    }
+
+    public function addGroup(Group $group){
+        $this->groups[] = $group;
+    }
+
+    public function removeGroup(Group $group){
+        $this->groups->removeElement($group);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAdmins()
+    {
+        return $this->admins;
+    }
+
+    /**
+     * @param mixed $admins
+     */
+    public function setAdmins($admins)
+    {
+        $this->admins = $admins;
+    }
+
+    public function addAdmin(Group $admin){
+        $this->admins[] = $admin;
+    }
+
+    public function removeAdmin(Group $admin){
+        $this->admins->removeElement($admin);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    /**
+     * @param mixed $events
+     */
+    public function setEvents($events)
+    {
+        $this->events = $events;
+    }
+
+    public function addEvent(Event $event){
+        $this->events[] = $event;
     }
 }

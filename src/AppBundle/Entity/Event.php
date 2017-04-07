@@ -9,6 +9,7 @@
 namespace AppBundle\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -28,7 +29,7 @@ class Event {
     /**
      * @var string The event identifier
      *
-     * @ORM\Column(type="euid")
+     * @ORM\Column(type="guid")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
      */
@@ -50,31 +51,31 @@ class Event {
     private $description;
 
     /**
-     * @var string The event beginning
+     * @var The event beginning date
      *
      * @ORM\Column(type="datetime")
      */
     private $date_start;
 
     /**
-     * @var string The event ending
+     * @var The event ending date
      *
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
      */
     private $date_end;
 
     /**
-     * @var string The event group
+     * @var Group The event group
      *
-     * @ORM\OneToMany(targetEntity="Group", mappedBy="group")
-     * @ORM\JoinColumn(name="group_id, referencedColumnName="guid")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Group")
      */
     private $group;
 
     /**
-     * @var string The event users
+     * @var User[] The event users
      *
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="users")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="events")
      */
     private $participants;
 
@@ -131,7 +132,7 @@ class Event {
     }
 
     /**
-     * @return string
+     * @return The
      */
     public function getDateStart()
     {
@@ -139,7 +140,7 @@ class Event {
     }
 
     /**
-     * @param string $date_start
+     * @param The $date_start
      */
     public function setDateStart($date_start)
     {
@@ -147,7 +148,7 @@ class Event {
     }
 
     /**
-     * @return string
+     * @return The
      */
     public function getDateEnd()
     {
@@ -155,7 +156,7 @@ class Event {
     }
 
     /**
-     * @param string $date_end
+     * @param The $date_end
      */
     public function setDateEnd($date_end)
     {
@@ -163,7 +164,7 @@ class Event {
     }
 
     /**
-     * @return string
+     * @return Group
      */
     public function getGroup()
     {
@@ -171,7 +172,7 @@ class Event {
     }
 
     /**
-     * @param string $group
+     * @param Group $group
      */
     public function setGroup($group)
     {
@@ -179,7 +180,7 @@ class Event {
     }
 
     /**
-     * @return string
+     * @return User[]
      */
     public function getParticipants()
     {
@@ -187,10 +188,15 @@ class Event {
     }
 
     /**
-     * @param string $participants
+     * @param User[] $participants
      */
     public function setParticipants($participants)
     {
         $this->participants = $participants;
+    }
+
+    public function addParticipant(User $user) {
+        $this->participants[] = $user;
+        $user->addEvent($this);
     }
 }
